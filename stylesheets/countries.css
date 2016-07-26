@@ -1,0 +1,16 @@
+.land-border {
+  fill: none;
+  stroke: #669966;
+  stroke-dasharray: 2,2;
+  stroke-linejoin: round;
+}
+.water-border {
+  fill: none;
+  stroke: #000080;
+  stroke-dasharray: 2,2;
+  stroke-linejoin: round;
+}
+
+svg {
+	background-color: "light-blue"
+}

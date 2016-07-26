@@ -6,8 +6,11 @@
     <title>Hist441-project by dangerful</title>
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <link rel="stylesheet" href="stylesheets/countries.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script src="javascripts/respond.js"></script>
+    <script src="http://d3js.org/topojson.v1.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -20,10 +23,7 @@
   <body>
       <div id="header">
         <nav>
-          <li class="fork"><a href="https://github.com/dangerful/HIST441-Project">View On GitHub</a></li>
-          <li class="downloads"><a href="https://github.com/dangerful/HIST441-Project/zipball/master">ZIP</a></li>
-          <li class="downloads"><a href="https://github.com/dangerful/HIST441-Project/tarball/master">TAR</a></li>
-          <li class="title">DOWNLOADS</li>
+          <li><a href="https://github.com/dangerful/HIST441-Project">References</a></li>
         </nav>
       </div><!-- end header -->
 
@@ -34,7 +34,6 @@
           <h1>Hist441-project</h1>
           <p>Project for HIST 441</p>
           <hr>
-          <span class="credits left">Project maintained by <a href="https://github.com/dangerful">dangerful</a></span>
           <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
         </div>
 
@@ -62,6 +61,38 @@
 <a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h3>
 
 <p>Having trouble with Pages? Check out our <a href="https://help.github.com/pages">documentation</a> or <a href="https://github.com/contact">contact support</a> and we’ll help you sort it out.</p>
+
+<script type="text/javascript">
+  <!--https://bost.ocks.org/mike/map/ -->
+    var section = d3.select("section"); 
+    var width = 960,
+    height = 1160;
+
+    var svg = section.append("svg")
+      .attr("width", width)
+      .attr("height", height);
+    d3.json("countries.json", function(error, world) {
+      if (error) return console.error(error);
+      console.log(world);
+      var countries = topojson.feature(world, world.objects.countries);
+      var projection = d3.geo.mercator();
+      var path = d3.geo.path().projection(projection);
+      svg.append("path")
+      .datum(countries)
+      .attr("d", path);
+      svg.selectAll(".countries").data(countries.features).enter().append("path")
+    .attr("class", function(d) { return "country " + d.id; })
+    .attr("d", path)
+    svg.append("path")
+    .datum(topojson.mesh(world, world.objects.countries, function(a, b) { return a !== b; }))
+    .attr("d", path)
+    .attr("class", "land-border");
+    //svg.append("path")
+    //.datum(topojson.mesh(world, world.objects.countries, function(a, b) { return a === b; }))
+    //.attr("d", path)
+    //.attr("class", "water-border");
+    })
+</script>
       </section>
 
     </div>
