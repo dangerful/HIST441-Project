@@ -1,0 +1,25 @@
+﻿https://www.graphiq.com/wlp/1C4xl7rdBPf?data-script-version=true&data-sv=1.0.0
+
+Number of Deaths
+	- Jews : up to 6,000,000
+	- Soviet Civilians: ~ 7,000,000 (including 1.3 million Jews included in 6 mill figure)
+	- Soviet POWs: ~3,000,000	(including 50,000 Jewish soldiers)
+	- Non-Jewish Poles: ~1,800,000
+	- Serb Civilians: 312,000
+	- Disabled living in institutions: up to 250,000
+	- Roma: 196,000 to 220,000
+	- Jehovah's Witnesses: ~1,900
+	- Repeat criminal offenders, asocials, homosexuals: at least 700,000
+	
+	
+Search Keys:
+- Volkszählung, zensus - census
+- Authors Hilberg, Browning, Gilbert
+
+Programming stuff
+- https://github.com/johan/world.geo.json
+- chrome.exe --user-data-dir="C:/Chrome dev session2" --disable-web-security
+- https://shancarter.github.io/distillery/ // geojson to topojson
+- http://wayback.archive-it.org/3635/20130722072328/http://library.thinkquest.org/C006628/download.html // historical GIS data
+- https://web.stanford.edu/group/spatialhistory/cgi-bin/site/pub.php?id=51 // European GIS data
+- http://www.mapshaper.org/ -shapefile to topojson
