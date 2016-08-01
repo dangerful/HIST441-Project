@@ -7,11 +7,13 @@
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/github-dark.css">
     <link rel="stylesheet" href="stylesheets/countries.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="javascripts/respond.js"></script>
     <script src="javascripts/svg-pan-zoom.min.js"></script>
     <script src="https://d3js.org/topojson.v1.min.js"></script>
     <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -29,18 +31,31 @@
 
     <div class="wrapper">
       <section>
+        <ul class="nav nav-tabs">
+          <li class="active"><a data-toggle="tab" href="#JewDeaths">Jew Deaths</a></li>
+          <li><a data-toggle="tab" href="#RomaDeaths">Roma Deaths</a></li>
+        </ul>
+        <div class="tab-content">
+          <div id="JewDeaths" class="tab-pane fade in active">
+          </div>
+          <div id="RomaDeaths" class="tab-pane fade">
+          </div>
+        </div>
         <script type="text/javascript">
-          var jewDeaths = [];
-          d3.json("jewDeaths.json", function(error, deaths) {
+          var svgs = [];
+
+          function RenderDeaths(type){
+          var deaths = [];
+          d3.json(type+"Deaths.json", function(error, data) {
             if (error) return console.error(error);
-            jewDeaths = deaths;
+            deaths = data;
           });
 
           <!--https://bost.ocks.org/mike/map/ -->
-          var id = "map";
-          var section = d3.select("section"); 
+          var id = type + "DeathMap";
+          var section = d3.select("#" + type + "Deaths"); 
           var width = 960,
-          height = 920;
+            height = 920;
 
           var svg = section.append("svg")
             .attr("width", width)
@@ -60,7 +75,6 @@
             .attr('class', 'hidden tooltip');
 
             svg.selectAll(".countries").data(countries.features).enter().append("path")
-              .attr("id", "Jew Deaths")
               .attr("class", function(d) { return "country " + d.properties.NAME;})
               .attr("d", path)
               .on('mousemove', function(d) {
@@ -70,14 +84,14 @@
                   var clientRectangle = svg.node().getBoundingClientRect();
                   var overlay = tooltip.classed('hidden', false)
                       .attr('style', 'left:' + (mouse[0] + 15 + clientRectangle.left) +
-                              'px; top:' + (mouse[1] - 35 + clientRectangle.top) + 'px');
+                              'px; top:' + (mouse[1] + 15 + clientRectangle.top) + 'px');
                   var found = false;
-                  for (var i = 0; i < jewDeaths.length; i++){
-                    if (jewDeaths[i].country === d.properties.NAME){
-                      if (jewDeaths[i].minLoss === jewDeaths[i].maxLoss || jewDeaths[i].maxLoss == null){
-                        overlay.html(d.properties.NAME + "<br/>Jew Deaths: ~" + jewDeaths[i].minLoss + "<br/>% of Population: " + jewDeaths[i].percent);
+                  for (var i = 0; i < deaths.length; i++){
+                    if (deaths[i].country === d.properties.NAME){
+                      if (deaths[i].minLoss === deaths[i].maxLoss || deaths[i].maxLoss == null){
+                        overlay.html("<b>" + d.properties.NAME + "</b><br/>" + type + " Deaths: ~" + deaths[i].minLoss);// + "<br/>% of Population: " + deaths[i].percent);
                       } else {
-                        overlay.html(d.properties.NAME + "<br/>Jew Deaths: " + jewDeaths[i].minLoss + " - " + jewDeaths[i].maxLoss + "<br/>% of Population: " + jewDeaths[i].percent);
+                        overlay.html("<b>" + d.properties.NAME + "</b><br/>" + type + " Deaths: " + deaths[i].minLoss + " - " + deaths[i].maxLoss);// + "<br/>% of Population: " + deaths[i].percent);
                       }
                       found = true;
                       break;
@@ -90,10 +104,11 @@
               })
               .on('mouseout', function() {
                   tooltip.classed('hidden', true);
-              });
+              })
+              .attr("background", "#1C6BA0");
 
-            for (var i = 0; i < jewDeaths.length; i++) {
-                svg.selectAll("." + jewDeaths[i].country).attr("style", "fill:" + ColorLuminance("#905030", jewDeaths[i].minLoss/1000000));
+            for (var i = 0; i < deaths.length; i++) {
+                svg.selectAll("." + deaths[i].country).attr("style", "fill:" + ColorLuminance("#905030", deaths[i].minLoss/1000000 - .5));
             }
 
             //svg.append("path")
@@ -105,8 +120,49 @@
             //.attr("d", path)
             //.attr("class", "water-border");
             
-            var panZoomMap = svgPanZoom('#' + id, {});
-          });
+            var svgNode = svg.node();
+            var lastEventListener = function(){
+              var panZoomMap = svgPanZoom(svgNode, {
+                zoomEnabled: true,
+                controlIconsEnabled: true,
+                fit: false
+              });
+              panZoomMap.setOnZoom(function(level){
+                zoom(level);
+              });
+
+              panZoomMap.setOnPan(function(point){
+                pan(point)
+              })
+
+              svgs.push(panZoomMap);
+
+
+              zoom(3);
+              pan({x:-1300, y: 300});
+            };
+            svgNode.addEventListener('load', lastEventListener);
+            });
+
+          }
+
+          function pan(point){
+              for (var i = 0; i < svgs.length; i++){
+                svgs[i].pan(point);
+              }
+          }
+
+          function zoom(level){
+              for (var i = 0; i < svgs.length; i++){
+                svgs[i].zoom(level);
+              }
+          }
+
+          function zoomAtPointBy(zoom, x, y){
+              for (var i = 0; i < svgs.length; i++){
+                svgs[i].zoomAtPointBy(zoom, {x: this.x, y: this.y});
+              }
+          }
 
           //https://www.sitepoint.com/javascript-generate-lighter-darker-color/
           function ColorLuminance(hex, lum) {
@@ -127,6 +183,13 @@
 
             return rgb;
           }
+
+          RenderDeaths("Jew");
+          RenderDeaths("Roma");
+
+          jQuery('.nav-tabs a').click(function(){
+              $(this).tab('show');
+          })
         </script>
       </section>
 

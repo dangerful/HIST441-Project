@@ -1,0 +1,21 @@
+[
+	{"country": "Austria", "minLoss": null, "maxLoss": null, "pop1939": 20000},
+	{"country": "Belgium", "minLoss": 6800, "maxLoss": 8250, "pop1939": 11200},
+	{"country": "Bulgaria", "minLoss": 0, "maxLoss": 0, "pop1939": 80000},
+	{"country": "Czech Republic", "minLoss": 5000, "maxLoss": 6500, "pop1939": 13000},
+	{"country": "Estonia", "minLoss": 500, "maxLoss": 1000, "pop1939": 1000},
+	{"country": "France", "minLoss": 15150, "maxLoss": 15150, "pop1939": 40000},
+	{"country": "Germany", "minLoss": 15000, "maxLoss": 15000, "pop1939": 20000},
+	{"country": "Greece", "minLoss": 50, "maxLoss": 50, "pop1939": null},
+	{"country": "Hungary", "minLoss": 1000, "maxLoss": 28000, "pop1939": 100000},
+	{"country": "Italy", "minLoss": 1000, "maxLoss": 1000, "pop1939": 25000},
+	{"country": "Latvia", "minLoss": 1500, "maxLoss": 2500, "pop1939": 5000},
+	{"country": "Lithuania", "minLoss": 1000, "maxLoss": 500, "pop1939": 1000},
+	{"country": "Luxembourg", "minLoss": 100, "maxLoss": 200, "pop1939": 200},
+	{"country": "Netherlands", "minLoss": 215, "maxLoss": 500, "pop1939": 500},
+	{"country": "Poland", "minLoss": 8000, "maxLoss": 35000, "pop1939": 50000},
+	{"country": "Romania", "minLoss": 19000, "maxLoss": 36000, "pop1939": 300000},
+	{"country": "Slovakia", "minLoss": 400, "maxLoss": 10000, "pop1939": 80000},
+	{"country": "USSR", "minLoss": 30000, "maxLoss": 35000, "pop1939": 200000},
+	{"country": "Yugoslavia", "minLoss": 26000, "maxLoss": 90000, "pop1939": 100000}
+]
