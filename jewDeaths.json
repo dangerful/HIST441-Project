@@ -19,6 +19,6 @@
 	{"country": "Poland", "minLoss": 2900000, "maxLoss": 3000000, "percent": 90},
 	{"country": "Romania", "minLoss": 271000, "maxLoss": 287000, "percent": 47},
 	{"country": "Slovakia", "minLoss": 68000, "maxLoss": 71000, "percent": 80},
-	{"country": "Soviet Union", "minLoss": 1000000, "maxLoss": 1000000, "percent": 36},
+	{"country": "USSR", "minLoss": 1000000, "maxLoss": 1000000, "percent": 36},
 	{"country": "Yugoslavia", "minLoss": 56200, "maxLoss": 63300, "percent": 81}
 ]
