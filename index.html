@@ -92,6 +92,10 @@
                   tooltip.classed('hidden', true);
               });
 
+            for (var i = 0; i < jewDeaths.length; i++) {
+                svg.selectAll("." + jewDeaths[i].country).attr("style", "fill:" + ColorLuminance("#905030", jewDeaths[i].minLoss/1000000));
+            }
+
             //svg.append("path")
             //  .datum(topojson.mesh(world, world.objects.cntry1938, function(a, b) { return a !== b; }))
             //  .attr("d", path)
