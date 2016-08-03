@@ -11,6 +11,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="javascripts/respond.js"></script>
     <script src="javascripts/svg-pan-zoom.min.js"></script>
+    <script src="javascripts/chroma.min.js"></script>
     <script src="https://d3js.org/topojson.v1.min.js"></script>
     <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
@@ -56,6 +57,7 @@
           </div>
         </div>
         <script type="text/javascript">
+          var chromaScale = chroma.scale([0xffc58a, 0x8b0000]).colors(100);
           var svgs = [];
           var countries;
           d3.json("cntry1938.json", function(error, world) {
@@ -122,7 +124,13 @@
                 .attr("background", "#1C6BA0");
 
               for (var i = 0; i < populations.length; i++) {
-                  svg.selectAll("." + populations[i].country).attr("style", "fill:" + ColorLuminance("#905030", populations[i].jewPopulation/300000));
+                var color;
+                if (populations[i].jewPopulation == null) {
+                  color = 'grey';
+                } else {
+                  color = chromaScale[Math.round((populations[i].jewPopulation/3000000)*100)];
+                }
+                svg.selectAll("." + populations[i].country).attr("style", "fill:" + color);
               }
 
               var svgNode = svg.node();
@@ -210,7 +218,13 @@
                 .attr("background", "#1C6BA0");
 
                 for (var i = 0; i < deaths.length; i++) {
-                    svg.selectAll("." + deaths[i].country).attr("style", "fill:" + ColorLuminance("#905030", deaths[i].minLoss/100000));
+                  var color;
+                  if (deaths[i].minLoss == null) {
+                    color = 'grey';
+                  } else {
+                    color = chromaScale[Math.round((deaths[i].minLoss/3000000)*100)];
+                  }
+                  svg.selectAll("." + deaths[i].country).attr("style", "fill:" + color);
                 }
 
                 var svgNode = svg.node();
@@ -256,26 +270,6 @@
               for (var i = 0; i < svgs.length; i++){
                 svgs[i].zoomAtPointBy(zoom, {x: this.x, y: this.y});
               }
-          }
-
-          //https://www.sitepoint.com/javascript-generate-lighter-darker-color/
-          function ColorLuminance(hex, lum) {
-            // validate hex string
-            hex = String(hex).replace(/[^0-9a-f]/gi, '');
-            if (hex.length < 6) {
-              hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
-            }
-            lum = lum || 0;
-
-            // convert to decimal and change luminosity
-            var rgb = "#", c, i;
-            for (i = 0; i < 3; i++) {
-              c = parseInt(hex.substr(i*2,2), 16);
-              c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
-              rgb += ("00"+c).substr(c.length);
-            }
-
-            return rgb;
           }
 
           jQuery('.nav-tabs a').click(function(){
