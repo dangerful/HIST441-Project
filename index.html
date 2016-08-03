@@ -31,14 +31,28 @@
 
     <div class="wrapper">
       <section>
-        <ul class="nav nav-tabs">
-          <li class="active"><a data-toggle="tab" href="#JewDeaths">Jew Deaths</a></li>
-          <li><a data-toggle="tab" href="#RomaDeaths">Roma Deaths</a></li>
-        </ul>
-        <div class="tab-content">
-          <div id="JewDeaths" class="tab-pane fade in active">
+        <div id="JewPopulations">
+          <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#PreNazi">Pre-Nazi Rule Jewish Populations</a></li>
+            <li><a data-toggle="tab" href="#PostWar">Post-War Jewish Populations</a></li>
+          </ul>
+          <div class="tab-content">
+            <div id="PreNazi" class="tab-pane fade in active">
+            </div>
+            <div id="PostWar" class="tab-pane fade">
+            </div>
           </div>
-          <div id="RomaDeaths" class="tab-pane fade">
+        </div>
+        <div id="Deaths">
+          <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#JewDeaths">Jew Deaths</a></li>
+            <li><a data-toggle="tab" href="#RomaDeaths">Roma Deaths</a></li>
+          </ul>
+          <div class="tab-content">
+            <div id="JewDeaths" class="tab-pane fade in active">
+            </div>
+            <div id="RomaDeaths" class="tab-pane fade">
+            </div>
           </div>
         </div>
         <script type="text/javascript">
@@ -51,7 +65,91 @@
 
             RenderDeaths("Jew");
             RenderDeaths("Roma");
+
+            RenderJewishPopulations("PreNazi");
+            RenderJewishPopulations("PostWar");
           });
+
+          function RenderJewishPopulations(type){
+            d3.json(type+"JewPopulation.json", function(error, populations) {
+              if (error) return console.error(error);
+
+              var id = type + "PopulationMap";
+              var section = d3.select("#" + type); 
+              var width = 960,
+                height = 920;
+
+              var svg = section.append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .attr("id", id);
+              var projection = d3.geo.mercator();
+              var path = d3.geo.path().projection(projection);
+              svg.append("path")
+                .datum(countries)
+                .attr("d", path);
+
+              var tooltip = d3.select('#JewPopulations').append('div')
+              .attr('class', 'hidden tooltip');
+
+              svg.selectAll(".countries").data(countries.features).enter().append("path")
+                .attr("class", function(d) { return "country " + d.properties.NAME;})
+                .attr("d", path)
+                .on('mousemove', function(d) {
+                    var mouse = d3.mouse(svg.node()).map(function(d) {
+                        return parseInt(d);
+                    });
+                    var clientRectangle = jQuery("#" + type).position();
+                    var overlay = tooltip.classed('hidden', false)
+                        .attr('style', 'left:' + (mouse[0] + 15 + clientRectangle.left) +
+                                'px; top:' + (mouse[1] + 15 + clientRectangle.top) + 'px');
+                    var found = false;
+                    for (var i = 0; i < populations.length; i++){
+                      if (populations[i].country === d.properties.NAME){
+                        overlay.html("<b>" + d.properties.NAME + "</b><br/>" + type + " Population: ~" + populations[i].jewPopulation);
+                        found = true;
+                        break;
+                      }                    
+                    } 
+                    if (found === false) {
+                      overlay.html(d.properties.NAME);
+                    }  
+                        
+                })
+                .on('mouseout', function() {
+                    tooltip.classed('hidden', true);
+                })
+                .attr("background", "#1C6BA0");
+
+              for (var i = 0; i < populations.length; i++) {
+                  svg.selectAll("." + populations[i].country).attr("style", "fill:" + ColorLuminance("#905030", populations[i].jewPopulation/300000));
+              }
+
+              var svgNode = svg.node();
+              var lastEventListener = function(){
+                var panZoomMap = svgPanZoom(svgNode, {
+                  zoomEnabled: true,
+                  controlIconsEnabled: true,
+                  fit: false
+                });
+                panZoomMap.setOnZoom(function(level){
+                  zoom(level);
+                });
+
+                panZoomMap.setOnPan(function(point){
+                  pan(point)
+                })
+
+                svgs.push(panZoomMap);
+
+
+                zoom(3);
+                pan({x:-1300, y: 300});
+              };
+              //svgNode.addEventListener('load', lastEventListener);
+              lastEventListener();
+            });
+          }
 
           function RenderDeaths(type){
             d3.json(type+"Deaths.json", function(error, deaths) {
@@ -75,17 +173,17 @@
                 .datum(countries)
                 .attr("d", path);
 
-              var tooltip = d3.select('body').append('div')
+              var tooltip = d3.select('#Deaths').append('div')
               .attr('class', 'hidden tooltip');
 
               svg.selectAll(".countries").data(countries.features).enter().append("path")
                 .attr("class", function(d) { return "country " + d.properties.NAME;})
                 .attr("d", path)
                 .on('mousemove', function(d) {
-                    var mouse = d3.mouse(svg.node()).map(function(d) {
+                    var mouse = d3.mouse(section.node()).map(function(d) {
                         return parseInt(d);
                     });
-                    var clientRectangle = svg.node().getBoundingClientRect();
+                    var clientRectangle = jQuery("#" + type + "Deaths").position();
                     var overlay = tooltip.classed('hidden', false)
                         .attr('style', 'left:' + (mouse[0] + 15 + clientRectangle.left) +
                                 'px; top:' + (mouse[1] + 15 + clientRectangle.top) + 'px');
@@ -112,7 +210,7 @@
                 .attr("background", "#1C6BA0");
 
                 for (var i = 0; i < deaths.length; i++) {
-                    svg.selectAll("." + deaths[i].country).attr("style", "fill:" + ColorLuminance("#905030", deaths[i].minLoss/1000000 - .5));
+                    svg.selectAll("." + deaths[i].country).attr("style", "fill:" + ColorLuminance("#905030", deaths[i].minLoss/100000));
                 }
 
                 var svgNode = svg.node();
