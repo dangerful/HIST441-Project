@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>Hist441-project by dangerful</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/github-dark.css">
     <link rel="stylesheet" href="stylesheets/countries.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="javascripts/respond.js"></script>
     <script src="javascripts/svg-pan-zoom.min.js"></script>
@@ -33,18 +33,23 @@
     <div class="wrapper">
       <section>
         <div id="JewPopulations">
+          <h2>Jewish Populations</h3>
           <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#PreNazi">Pre-Nazi Rule Jewish Populations</a></li>
-            <li><a data-toggle="tab" href="#PostWar">Post-War Jewish Populations</a></li>
+            <li class="active"><a data-toggle="tab" href="#PreNazi">Pre-Nazi Rule</a></li>
+            <li><a data-toggle="tab" href="#Wannsee">1942</a></li>
+            <li><a data-toggle="tab" href="#PostWar">Post-War</a></li>
           </ul>
           <div class="tab-content">
             <div id="PreNazi" class="tab-pane fade in active">
+            </div>
+            <div id="Wannsee" class="tab-pane fade">
             </div>
             <div id="PostWar" class="tab-pane fade">
             </div>
           </div>
         </div>
         <div id="Deaths">
+          <h2>Deaths By Country</h3>
           <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#JewDeaths">Jew Deaths</a></li>
             <li><a data-toggle="tab" href="#RomaDeaths">Roma Deaths</a></li>
@@ -69,6 +74,7 @@
             RenderDeaths("Roma");
 
             RenderJewishPopulations("PreNazi");
+            RenderJewishPopulations("Wannsee");
             RenderJewishPopulations("PostWar");
           });
 
@@ -108,13 +114,13 @@
                     var found = false;
                     for (var i = 0; i < populations.length; i++){
                       if (populations[i].country === d.properties.NAME){
-                        overlay.html("<b>" + d.properties.NAME + "</b><br/>" + type + " Population: ~" + populations[i].jewPopulation);
+                        overlay.html("<b>" + d.properties.NAME + "</b><br/>Population: ~" + populations[i].jewPopulation);
                         found = true;
                         break;
                       }                    
                     } 
                     if (found === false) {
-                      overlay.html(d.properties.NAME);
+                      overlay.html("<b>" + d.properties.NAME + "</b>");
                     }  
                         
                 })
@@ -128,7 +134,7 @@
                 if (populations[i].jewPopulation == null) {
                   color = 'grey';
                 } else {
-                  color = chromaScale[Math.round((populations[i].jewPopulation/3000000)*100)];
+                  color = chromaScale[Math.round((populations[i].jewPopulation/5000000)*100)];
                 }
                 svg.selectAll("." + populations[i].country).attr("style", "fill:" + color);
               }
@@ -208,7 +214,7 @@
                       }                    
                     } 
                     if (found === false) {
-                      overlay.html(d.properties.NAME);
+                      overlay.html("<b>" + d.properties.NAME + "</b>");
                     }  
                         
                 })

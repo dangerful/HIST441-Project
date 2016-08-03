@@ -35,3 +35,7 @@ div.tooltip {
     opacity: 0.9;
     position: absolute;
 }
+
+.wrapper, section {
+    max-width: 1000px;
+}
