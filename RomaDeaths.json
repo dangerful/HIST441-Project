@@ -1,6 +1,6 @@
 [
-	{"country": "Austria", "minLoss": null, "maxLoss": null, "pop1939": 20000},
-	{"country": "Belgium", "minLoss": 6800, "maxLoss": 8250, "pop1939": 11200},
+	{"country": "Austria", "minLoss": 6800, "maxLoss": 8250, "pop1939": 1120},
+	{"country": "Belgium", "minLoss": 500, "maxLoss": 350, "pop1939": 600},
 	{"country": "Bulgaria", "minLoss": 0, "maxLoss": 0, "pop1939": 80000},
 	{"country": "Czech Republic", "minLoss": 5000, "maxLoss": 6500, "pop1939": 13000},
 	{"country": "Estonia", "minLoss": 500, "maxLoss": 1000, "pop1939": 1000},
