@@ -36,13 +36,13 @@
           <h2>Jewish Populations</h3>
           <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#PreNazi">Pre-Nazi Rule</a></li>
-            <li><a data-toggle="tab" href="#Wannsee">1942</a></li>
+            <li><a data-toggle="tab" href="#Year1942">1942</a></li>
             <li><a data-toggle="tab" href="#PostWar">Post-War</a></li>
           </ul>
           <div class="tab-content">
             <div id="PreNazi" class="tab-pane fade in active">
             </div>
-            <div id="Wannsee" class="tab-pane fade">
+            <div id="Year1942" class="tab-pane fade">
             </div>
             <div id="PostWar" class="tab-pane fade">
             </div>
@@ -62,7 +62,7 @@
           </div>
         </div>
         <script type="text/javascript">
-          var chromaScale = chroma.scale([0xffc58a, 0x8b0000]).colors(100);
+          var chromaScale = chroma.scale([0xffc58a, 0x8b0000]).colors(101);
           var svgs = [];
           var countries;
           d3.json("cntry1938.json", function(error, world) {
@@ -74,7 +74,7 @@
             RenderDeaths("Roma");
 
             RenderJewishPopulations("PreNazi");
-            RenderJewishPopulations("Wannsee");
+            RenderJewishPopulations("Year1942");
             RenderJewishPopulations("PostWar");
           });
 
@@ -101,7 +101,7 @@
               .attr('class', 'hidden tooltip');
 
               svg.selectAll(".countries").data(countries.features).enter().append("path")
-                .attr("class", function(d) { return "country " + d.properties.NAME;})
+                .attr("class", function(d) { return "country " + d.properties.NAME.replace(" ", "");})
                 .attr("d", path)
                 .on('mousemove', function(d) {
                     var mouse = d3.mouse(svg.node()).map(function(d) {
@@ -134,9 +134,9 @@
                 if (populations[i].jewPopulation == null) {
                   color = 'grey';
                 } else {
-                  color = chromaScale[Math.round((populations[i].jewPopulation/5000000)*100)];
+                  color = chromaScale[Math.round((populations[i].jewPopulation/3100000)*100)];
                 }
-                svg.selectAll("." + populations[i].country).attr("style", "fill:" + color);
+                svg.selectAll("." + populations[i].country.replace(" ", "")).attr("style", "fill:" + color);
               }
 
               var svgNode = svg.node();
@@ -191,7 +191,7 @@
               .attr('class', 'hidden tooltip');
 
               svg.selectAll(".countries").data(countries.features).enter().append("path")
-                .attr("class", function(d) { return "country " + d.properties.NAME;})
+                .attr("class", function(d) { return "country " + d.properties.NAME.replace(" ", "");})
                 .attr("d", path)
                 .on('mousemove', function(d) {
                     var mouse = d3.mouse(section.node()).map(function(d) {
@@ -230,7 +230,7 @@
                   } else {
                     color = chromaScale[Math.round((deaths[i].minLoss/3000000)*100)];
                   }
-                  svg.selectAll("." + deaths[i].country).attr("style", "fill:" + color);
+                  svg.selectAll("." + deaths[i].country.replace(" ", "")).attr("style", "fill:" + color);
                 }
 
                 var svgNode = svg.node();
