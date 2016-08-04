@@ -18,7 +18,8 @@
 		{"country": "Columbia", "number": 1400},
 		{"country": "Australia", "number": 1000},
 		{"country": "Canada", "number": 5000},
-		{"country": "Norway", "number": 400}
+		{"country": "Norway", "number": 400},
+		{"country": "Union of South Africa", "number": 6500}
 	],
 	"emigration": [
 		{"country": "Germany", "number": 130000, "notes": ""},

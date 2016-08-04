@@ -191,7 +191,7 @@
               .attr('class', 'hidden tooltip');
 
               svg.selectAll(".countries").data(countries.features).enter().append("path")
-                .attr("class", function(d) { return "country " + d.properties.NAME.replace(" ", "");})
+                .attr("class", function(d) { return "country " + d.properties.NAME.replace(" ", "").replace(" ", "").replace(" ", "");})
                 .attr("d", path)
                 .on('mousemove', function(d) {
                   var mouse = d3.mouse(svg.node()).map(function(d) {
@@ -233,7 +233,7 @@
                 } else {
                   color = negativeScale[Math.round((refugees.emigration[j].number/300000)*100)];
                 }
-                svg.selectAll("." + refugees.emigration[j].country.replace(" ", "")).attr("style", "fill:" + color);
+                svg.selectAll("." + refugees.emigration[j].country.replace(" ", "").replace(" ", "").replace(" ", "")).attr("style", "fill:" + color);
               }
               for (var j = 0; j < refugees.immigration.length; j++){
                 var color;
@@ -242,7 +242,7 @@
                 } else {
                   color = positiveScale[Math.round((refugees.immigration[j].number/300000)*100)];
                 }
-                svg.selectAll("." + refugees.immigration[j].country.replace(" ", "")).attr("style", "fill:" + color);
+                svg.selectAll("." + refugees.immigration[j].country.replace(" ", "").replace(" ", "").replace(" ", "")).attr("style", "fill:" + color);
               }
 
               var svgNode = svg.node();
@@ -393,6 +393,7 @@
           <li><a href="http://www.mhmc.ca/media_library/files/50ca081151b8b.pdf">Jewish immigration to Canada – A government’s position</a></li>
           <li><a href="http://www.dmt.oslo.no/no/joder_i_norge/historie/frem_til_1900/Den+f%C3%B8rste+j%C3%B8diske+innvandringen.9UFRjK3Q.ips">The First Jewish immigration</a></li>
           <li><a href="https://www.ushmm.org/outreach/en/article.php?ModuleId=10007740">Rescue in Denmark</a></li>
+          <li><a href="https://web.archive.org/web/20071113021505/http://www.ctholocaust.co.za/view.asp?pg=refuge_sa_2">Travelling Exhibition: Seelomg Refuge (Cape Town Holocaust Centre)</a></li>
         </ul>
       </section>
 
