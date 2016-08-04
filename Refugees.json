@@ -1,0 +1,26 @@
+{
+	"immigration": [
+		{"country": "United States", "number": 90000},
+		{"country": "Cuba", "number": 2900},
+		{"country": "Brazil", "number": 15000},
+		{"country": "Bolivia", "number": 8000},
+		{"country": "Chile", "number": 10000},
+		{"country": "Argentina", "number": 25000},
+		{"country": "Palestine", "number": 66000},
+		{"country": "China", "number": 15000},
+		{"country": "United Kingdom", "number": 48000},
+		{"country": "Netherlands", "number": 30000},
+		{"country": "Belgium", "number": 30000},
+		{"country": "France", "number": 38000},
+		{"country": "Switzerland", "number": 8000},
+		{"country": "USSR", "number": 300000},
+		{"country": "Uruguay", "number": 1500},
+		{"country": "Columbia", "number": 1400},
+		{"country": "Australia", "number": 1000}
+	],
+	"emigration": [
+		{"country": "Germany", "number": 130000, "notes": ""},
+		{"country": "Poland", "number": 300000, "notes": "Many Jews fled Poland east-ward to the Soviet Union during the invasion in 1941"},
+		{"country": "Austria", "number": 50000, "notes": "Left during the annexation in March, 1938 (between April and November 1938)"}
+	]
+}

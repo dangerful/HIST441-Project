@@ -33,7 +33,7 @@
     <div class="wrapper">
       <section>
         <div id="JewPopulations">
-          <h2>Jewish Populations</h3>
+          <h1>Jewish Populations</h1>
           <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#PreNazi">Pre-Nazi Rule</a></li>
             <li><a data-toggle="tab" href="#Year1942">1942</a></li>
@@ -48,8 +48,13 @@
             </div>
           </div>
         </div>
+        <div id="ImmigrationEmigration">
+          <h1>Immigration and Emigration (1935 - 1941)</h1>
+          <div id="Refugees" class="tab-pane fade in active">
+          </div>
+        </div>
         <div id="Deaths">
-          <h2>Deaths By Country</h3>
+          <h1>Deaths By Country</h1>
           <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#JewDeaths">Jew Deaths</a></li>
             <li><a data-toggle="tab" href="#RomaDeaths">Roma Deaths</a></li>
@@ -62,7 +67,8 @@
           </div>
         </div>
         <script type="text/javascript">
-          var chromaScale = chroma.scale([0xffc58a, 0x8b0000]).colors(101);
+          var negativeScale = chroma.scale([0xffc58a, 0x8b0000]).colors(101);
+          var positiveScale = chroma.scale([0x9dc680, 0x008000]).colors(101);
           var populationSvgs = []; 
           var deathSvgs = []; 
           var width = 960,
@@ -73,12 +79,13 @@
             console.log(world);
             countries = topojson.feature(world, world.objects.cntry1938);
 
-            RenderDeaths("Jew");
-            RenderDeaths("Roma");
-
             RenderJewishPopulations("PreNazi");
+            RenderRefugees();
+            RenderDeaths("Jew");
+
             RenderJewishPopulations("Year1942");
             RenderJewishPopulations("PostWar");
+            RenderDeaths("Roma");
           });
 
           function RenderJewishPopulations(type){
@@ -134,7 +141,7 @@
                 if (populations[i].jewPopulation == null) {
                   color = 'grey';
                 } else {
-                  color = chromaScale[Math.round((populations[i].jewPopulation/3100000)*100)];
+                  color = negativeScale[Math.round((populations[i].jewPopulation/3100000)*100)];
                 }
                 svg.selectAll("." + populations[i].country.replace(" ", "")).attr("style", "fill:" + color);
               }
@@ -159,6 +166,93 @@
 
                 zoom(3, populationSvgs);
                 pan({x:-1300, y: 300}, populationSvgs);
+              };
+              //svgNode.addEventListener('load', lastEventListener);
+              lastEventListener();
+            });
+          }
+
+          function RenderRefugees(){
+            d3.json("Refugees.json", function(error, refugees) {
+              if (error) return console.error(error);
+
+              var id = "RefugeesMap";
+              var section = d3.select("#Refugees");
+              var svg = section.append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .attr("id", id);
+              var projection = d3.geo.mercator();
+              var path = d3.geo.path().projection(projection);
+              svg.append("path")
+                .datum(countries)
+                .attr("d", path);
+
+              var tooltip = d3.select('#Refugees').append('div')
+              .attr('class', 'hidden tooltip');
+
+              svg.selectAll(".countries").data(countries.features).enter().append("path")
+                .attr("class", function(d) { return "country " + d.properties.NAME.replace(" ", "");})
+                .attr("d", path)
+                .on('mousemove', function(d) {
+                  var mouse = d3.mouse(svg.node()).map(function(d) {
+                      return parseInt(d);
+                  });
+
+                  var clientRectangle = jQuery("#Refugees").position();
+                  var overlay = tooltip.classed('hidden', false)
+                      .attr('style', 'left:' + (mouse[0] + 15 + clientRectangle.left) +
+                              'px; top:' + (mouse[1] + 15 + clientRectangle.top) + 'px');
+                  var found = false;
+                  for (var j = 0; j < refugees.emigration.length; j++){
+                    if (refugees.emigration[j].country === d.properties.NAME){
+                      overlay.html("<b>" + d.properties.NAME + "</b><br/>Emigrated: ~" + refugees.emigration[j].number);
+                      found = true;
+                      break;
+                    }                      
+                  }
+                  for (var j = 0; j < refugees.immigration.length; j++){
+                    if (refugees.immigration[j].country === d.properties.NAME){
+                      overlay.html("<b>" + d.properties.NAME + "</b><br/>Immigrated: ~" + refugees.immigration[j].number);     
+                      found = true;
+                      break;
+                    }                
+                  }
+                  if (found === false) {
+                    overlay.html("<b>" + d.properties.NAME + "</b>");
+                  }
+                })
+                .on('mouseout', function() {
+                    tooltip.classed('hidden', true);
+              })
+              .attr("background", "#1C6BA0");
+
+              for (var j = 0; j < refugees.emigration.length; j++){
+                var color;
+                if (refugees.emigration[j].number == null) {
+                  color = 'grey';
+                } else {
+                  color = negativeScale[Math.round((refugees.emigration[j].number/300000)*100)];
+                }
+                svg.selectAll("." + refugees.emigration[j].country.replace(" ", "")).attr("style", "fill:" + color);
+              }
+              for (var j = 0; j < refugees.immigration.length; j++){
+                var color;
+                if (refugees.immigration[j].number == null) {
+                  color = 'grey';
+                } else {
+                  color = positiveScale[Math.round((refugees.immigration[j].number/300000)*100)];
+                }
+                svg.selectAll("." + refugees.immigration[j].country.replace(" ", "")).attr("style", "fill:" + color);
+              }
+
+              var svgNode = svg.node();
+              var lastEventListener = function(){
+                var panZoomMap = svgPanZoom(svgNode, {
+                  zoomEnabled: true,
+                  controlIconsEnabled: true,
+                  fit: false
+                });
               };
               //svgNode.addEventListener('load', lastEventListener);
               lastEventListener();
@@ -228,7 +322,7 @@
                   if (deaths[i].minLoss == null) {
                     color = 'grey';
                   } else {
-                    color = chromaScale[Math.round((deaths[i].minLoss/3000000)*100)];
+                    color = negativeScale[Math.round((deaths[i].minLoss/3000000)*100)];
                   }
                   svg.selectAll("." + deaths[i].country.replace(" ", "")).attr("style", "fill:" + color);
                 }
