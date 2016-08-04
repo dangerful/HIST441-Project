@@ -63,7 +63,10 @@
         </div>
         <script type="text/javascript">
           var chromaScale = chroma.scale([0xffc58a, 0x8b0000]).colors(101);
-          var svgs = [];
+          var populationSvgs = []; 
+          var deathSvgs = []; 
+          var width = 960,
+            height = 920;
           var countries;
           d3.json("cntry1938.json", function(error, world) {
             if (error) return console.error(error);
@@ -83,10 +86,7 @@
               if (error) return console.error(error);
 
               var id = type + "PopulationMap";
-              var section = d3.select("#" + type); 
-              var width = 960,
-                height = 920;
-
+              var section = d3.select("#" + type);
               var svg = section.append("svg")
                 .attr("width", width)
                 .attr("height", height)
@@ -147,18 +147,18 @@
                   fit: false
                 });
                 panZoomMap.setOnZoom(function(level){
-                  zoom(level);
+                  zoom(level, populationSvgs);
                 });
 
                 panZoomMap.setOnPan(function(point){
-                  pan(point)
+                  pan(point, populationSvgs)
                 })
 
-                svgs.push(panZoomMap);
+                populationSvgs.push(panZoomMap);
 
 
-                zoom(3);
-                pan({x:-1300, y: 300});
+                zoom(3, populationSvgs);
+                pan({x:-1300, y: 300}, populationSvgs);
               };
               //svgNode.addEventListener('load', lastEventListener);
               lastEventListener();
@@ -241,18 +241,18 @@
                     fit: false
                   });
                   panZoomMap.setOnZoom(function(level){
-                    zoom(level);
+                    zoom(level, deathSvgs);
                   });
 
                   panZoomMap.setOnPan(function(point){
-                    pan(point)
+                    pan(point, deathSvgs)
                   })
 
-                  svgs.push(panZoomMap);
+                  deathSvgs.push(panZoomMap);
 
 
-                  zoom(3);
-                  pan({x:-1300, y: 300});
+                  zoom(3, deathSvgs);
+                  pan({x:-1300, y: 300}, deathSvgs);
                 };
                 //svgNode.addEventListener('load', lastEventListener);
                 lastEventListener();
@@ -260,21 +260,21 @@
 
           }
 
-          function pan(point){
-              for (var i = 0; i < svgs.length; i++){
-                svgs[i].pan(point);
+          function pan(point, svgList){
+              for (var i = 0; i < svgList.length; i++){
+                svgList[i].pan(point);
               }
           }
 
-          function zoom(level){
-              for (var i = 0; i < svgs.length; i++){
-                svgs[i].zoom(level);
+          function zoom(level, svgList){
+              for (var i = 0; i < svgList.length; i++){
+                svgList[i].zoom(level);
               }
           }
 
-          function zoomAtPointBy(zoom, x, y){
-              for (var i = 0; i < svgs.length; i++){
-                svgs[i].zoomAtPointBy(zoom, {x: this.x, y: this.y});
+          function zoomAtPointBy(zoom, x, y, svgList){
+              for (var i = 0; i < svgList.length; i++){
+                svgList[i].zoomAtPointBy(zoom, {x: this.x, y: this.y});
               }
           }
 
