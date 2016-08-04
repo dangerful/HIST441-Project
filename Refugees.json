@@ -16,7 +16,9 @@
 		{"country": "USSR", "number": 300000},
 		{"country": "Uruguay", "number": 1500},
 		{"country": "Columbia", "number": 1400},
-		{"country": "Australia", "number": 1000}
+		{"country": "Australia", "number": 1000},
+		{"country": "Canada", "number": 5000},
+		{"country": "Norway", "number": 400}
 	],
 	"emigration": [
 		{"country": "Germany", "number": 130000, "notes": ""},
